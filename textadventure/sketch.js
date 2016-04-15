@@ -6,7 +6,9 @@ var playerX;
 var playerY;
 var bool;
 
-var mapMatrix;
+var mapMatrix =[[]];
+
+var mouseDown = false;
 
 function preload() {
 
@@ -22,22 +24,39 @@ function setup() {
 		noStroke();
   textFont(font);
   mapMatrix = 
-  (
-  	(0,0,2,0,0),
-  	(0,0,3,3,0),
-  	(0,0,0,3,0),
-  	(0,0,3,3,0),
-  	(0,0,1,0,0)
-  );
+  [  	
+  	[0,0,0,0,0,0,0],
+  	[0,0,0,2,0,0,0],
+  	[0,0,0,3,3,0,0],
+  	[0,0,0,0,3,0,0],
+  	[0,0,3,3,3,0,0],
+  	[0,0,0,1,0,0,0],
+  	[0,0,0,0,0,0,0]
+
+  ];
   //stores the map of the game
   //0 = wall
-  //1 = player start
-  //2 = end
+  //1 = player start //there should only be one on the map
+  //2 = end/exit 
   //3 = empty room
   
   //create player
   
   //find player
+  
+  for (var i =0; i< mapMatrix.length; i++)
+  {
+  	  for (var j =0; j< mapMatrix.length; j++)
+  	  {
+  	  	if(mapMatrix[i][j] == 1)
+  	  	{
+  	  		playerX = j; //the cooridianted are reveresed
+  	  		playerY = i;
+  	  	print("player start: "+playerX+ ","+playerY);
+  	  	}
+  	  }
+  }
+  
   
   //make new matrix to mark off visted rooms
   
@@ -51,7 +70,9 @@ function draw() {
   //drawHP();
   //drawInventory();
  drawText();
- print(mapMatrix[1]);
+ 
+ //print(mapMatrix[0][0]);
+ print(mapMatrix.length);
 }
 
 function drawBackground()
@@ -90,6 +111,16 @@ function button(txt, y)
 	rect(width/2,height*y,width*0.8,height/15);
 	fill(20);
 	text(txt, width/2, height*y);
+	
+		if (mouseX>width*0.1 && mouseX <width*0.9 && mouseY > height*y - height/30 && mouseY < height*y+height/30 && mouseDown)
+	{
+		mouseDown = false;
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
 }
 
 function drawInventory()
@@ -104,5 +135,14 @@ function drawInventory()
 function Player()
 {
 	
-	
+}
+
+
+//need these so is the buttons can work
+function mosuePressed(){
+	mouseDown = true;
+}
+
+function mouseReleased(){
+	mouseDown = false;
 }
