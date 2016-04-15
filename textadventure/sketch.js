@@ -4,6 +4,7 @@ var crurrentRoom;
 var playerX;
 var playerY;
 var playerHP;
+var gotBanana = false;
 var mapMatrix;
 var mouseDown;
 var textArray;
@@ -17,25 +18,29 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	mouseDown = false;
 	gameWin = false;
-	textSize((height+width) / 70);
+	textSize((height + width) / 70);
 	textAlign(CENTER, CENTER);
 	rectMode(CENTER);
 	noStroke();
 	textFont(font);
 	mapMatrix = [
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 2, 0, 0, 0],
-		[0, 0, 0, 3, 3, 0, 0],
-		[0, 0, 0, 0, 3, 0, 0],
-		[0, 0, 3, 3, 3, 0, 0],
-		[0, 0, 0, 1, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0]
+		[0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 3, 2, 3, 0, 0, 0, 0],
+		[0, 3, 3, 0, 3, 0, 3, 4, 0],
+		[0, 4, 0, 0, 3, 3, 3, 0, 0],
+		[0, 3, 3, 0, 0, 3, 0, 0, 0],
+		[0, 0, 3, 4, 3, 3, 0, 0, 0],
+		[0, 0, 3, 0, 3, 0, 0, 0, 0],
+		[0, 0, 4, 0, 1, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 	];
 	//stores the map of the game
 	//0 = wall
 	//1 = player start //there should only be one on the map
 	//2 = end/exit 
 	//3 = empty room
+	//4 = a room with a banana in it
 
 	//create player
 
@@ -54,7 +59,7 @@ function setup() {
 	//make new matrix to mark off visted rooms
 
 	//sets a bunch of text that could come up as you enter new rooms
-	textArray = ["Another dark room", "Another one", "You feel dizzy", "This is starting to get old", "You must be getting closer to an exit right?", "Do these walls look familiar to you?", "You wonder if you will ever see sunlight again"];
+	textArray = ["Another dark room", "Another one", "You feel dizzy", "This is starting to get old", "You must be getting closer to an exit right?", "Do these walls look familiar to you?", "You wonder if you will ever see sunlight again", "You walk into a dark room", "You try to find a light switch, but there are none", "You feel around on the ground, checking if there is anything useful", "How did you even end up here?"];
 
 	// set starttext
 	currentText = "You wake up, everything is black, are you blind? \n No you're just in a dark room, you feel the walls for a way out."
@@ -90,7 +95,7 @@ function drawText() {
 	fill(200, 220);
 	rect(width / 2, height / 2, width * 0.8, height * 0.7);
 	fill(20);
-	text(currentText, width / 2, height * 0.25, width*0.8,height*0.2);
+	text(currentText, width / 2, height * 0.25, width * 0.8, height * 0.2);
 
 	if (!gameWin) {
 		if (mapMatrix[playerX - 1][playerY] > 0) { //checks if space above is free to move into
@@ -126,8 +131,17 @@ function drawText() {
 		}
 
 		if (currentRoom > 3) {
-			if (button("Pick up Item", 0.8)) {
-
+			if (currentRoom == 4) {
+				if (button("Pick up banana", 0.8)) {
+					if (gotBanana) {
+						currentText = "You already have a banana."
+					} else {
+						gotBanana = true;
+						//set room to empty 
+						mapMatrix[playerX][playerY] = 3;
+						currentRoom = 3;
+					}
+				}
 			}
 		}
 	}
@@ -156,6 +170,10 @@ function drawInventory() {
 	rect(width * 0.5, height * 0.95, width * 0.9, height * 0.1);
 	fill(0);
 	text("Inventory: ", width * 0.2, height * 0.95);
+
+	if (gotBanana) {
+		text("banana", width * 0.4, height * 0.95);
+	}
 }
 
 //player clas
@@ -177,7 +195,7 @@ function updateRoom() {
 
 	if (currentRoom == 2) {
 		gameWin = true;
-		currentText = "You see a door, you use all your force to push it open. You are free";
+		currentText = "You see a door, you use all your force to push it open. \n The room fills with bright light, you are finally free of this maze";
 	}
 }
 
