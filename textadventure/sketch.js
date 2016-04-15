@@ -1,21 +1,21 @@
-var currentText;
+var currentText;//the text that is shown on the top of the screen
 var font;
-var crurrentRoom;
-var playerX;
-var playerY;
-var playerHP;
-var gotBanana = false;
-var mapMatrix;
-var mouseDown;
-var textArray;
+var crurrentRoom;// the type of room the player is in (see list next to map)
+var playerX;//posx
+var playerY;//poy
+var playerHP;//current hp
+var gotBanana = false;//if you have a banana
+var mapMatrix;//the map
+var mouseDown;//if the mouse is being held down
+var textArray;//an array of text that can be displayed as currentText
 var gameWin; //the winstate of the game
 
 function preload() {
-	font = loadFont("assets/playtime.ttf");
+	font = loadFont("assets/playtime.ttf");//loads the font before the rest starts
 }
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
+	createCanvas(windowWidth, windowHeight);//makes the game take up the full width/height of the screen. All sizing is done through % so it should resize fairly well to most devices.
 	mouseDown = false;
 	gameWin = false;
 	textSize((height + width) / 70);
@@ -42,8 +42,6 @@ function setup() {
 	//3 = empty room
 	//4 = a room with a banana in it
 
-	//create player
-
 	//finds player start location
 	for (var i = 0; i < mapMatrix.length; i++) {
 		for (var j = 0; j < mapMatrix.length; j++) {
@@ -54,9 +52,10 @@ function setup() {
 			}
 		}
 	}
+	//sets current room to start
 	currentRoom = 1;
 
-	//make new matrix to mark off visted rooms
+	//make new matrix to mark off visted rooms <-- didnt have time to implement this feature.
 
 	//sets a bunch of text that could come up as you enter new rooms
 	textArray = ["Another dark room", "Another one", "You feel dizzy", "This is starting to get old", "You must be getting closer to an exit right?", "Do these walls look familiar to you?", "You wonder if you will ever see sunlight again", "You walk into a dark room", "You try to find a light switch, but there are none", "You feel around on the ground, checking if there is anything useful", "How did you even end up here?"];
@@ -65,22 +64,19 @@ function setup() {
 	currentText = "You wake up, everything is black, are you blind? \n No you're just in a dark room, you feel the walls for a way out."
 
 	//sets player HP to full
-	playerHP = 100;
+	playerHP = 100; //<-- didnt have time to implment monsters/hp mechanics 
 }
 
+//stuff that happends every frame, should be self explanitory 
 function draw() {
 	drawBackground();
 	drawInventory();
 	drawHP();
-	//drawInventory();
 	drawText();
-
-	//print(mapMatrix[0][0]);
-	//print(mapMatrix.length);
 }
 
+//draws the game background every frame
 function drawBackground() {
-
 	if (gameWin) {
 		background(255);
 	} else {
@@ -91,6 +87,7 @@ function drawBackground() {
 	}
 }
 
+//draws the text, current and buttons depending on where the player can move
 function drawText() {
 	fill(200, 220);
 	rect(width / 2, height / 2, width * 0.8, height * 0.7);
@@ -131,13 +128,13 @@ function drawText() {
 		}
 
 		if (currentRoom > 3) {
-			if (currentRoom == 4) {
+			if (currentRoom == 4) {//if the room has a banana in it
 				if (button("Pick up banana", 0.8)) {
 					if (gotBanana) {
 						currentText = "You already have a banana."
 					} else {
 						gotBanana = true;
-						//set room to empty 
+						//sets room to empty 
 						mapMatrix[playerX][playerY] = 3;
 						currentRoom = 3;
 					}
@@ -147,6 +144,8 @@ function drawText() {
 	}
 }
 
+
+//draws and checks if a button is pressed, returns a boolean
 function button(txt, y) {
 	if (mouseX > width * 0.1 && mouseX < width * 0.9 && mouseY > height * y - height / 30 && mouseY < height * y + height / 30) {
 		fill(120, 100);
@@ -165,6 +164,7 @@ function button(txt, y) {
 	}
 }
 
+//draws the inventory at the bottom on ths screen
 function drawInventory() {
 	fill(200, 150);
 	rect(width * 0.5, height * 0.95, width * 0.9, height * 0.1);
@@ -176,11 +176,7 @@ function drawInventory() {
 	}
 }
 
-//player clas
-function Player() {
-
-}
-
+//draws the HP text and box at the top of the screen
 function drawHP() {
 	fill(200, 150);
 	rect(width * 0.1, height * 0.05, width * 0.1, height * 0.1);
@@ -188,7 +184,7 @@ function drawHP() {
 	text("HP: " + playerHP, width * 0.1, height * 0.05);
 }
 
-
+//updates the room and text whenever you move room, also checks if you are in the exit room
 function updateRoom() {
 	currentRoom = mapMatrix[playerX][playerY];
 	currentText = textArray[int(random(textArray.length))];
