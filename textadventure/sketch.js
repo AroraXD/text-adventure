@@ -17,7 +17,7 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	mouseDown = false;
 	gameWin = false;
-	textSize(height / 30);
+	textSize((height+width) / 70);
 	textAlign(CENTER, CENTER);
 	rectMode(CENTER);
 	noStroke();
@@ -57,7 +57,7 @@ function setup() {
 	textArray = ["Another dark room", "Another one", "You feel dizzy", "This is starting to get old", "You must be getting closer to an exit right?", "Do these walls look familiar to you?", "You wonder if you will ever see sunlight again"];
 
 	// set starttext
-	currentText = "You wake up, everything is black, are you blind? No you're just in a dark room."
+	currentText = "You wake up, everything is black, are you blind? \n No you're just in a dark room, you feel the walls for a way out."
 
 	//sets player HP to full
 	playerHP = 100;
@@ -90,7 +90,7 @@ function drawText() {
 	fill(200, 220);
 	rect(width / 2, height / 2, width * 0.8, height * 0.7);
 	fill(20);
-	text(currentText, width / 2, height * 0.25);
+	text(currentText, width / 2, height * 0.25, width*0.8,height*0.2);
 
 	if (!gameWin) {
 		if (mapMatrix[playerX - 1][playerY] > 0) { //checks if space above is free to move into
