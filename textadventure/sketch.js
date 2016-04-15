@@ -1,14 +1,13 @@
 var currentText;
 var font;
 var crurrentRoom;
-
 var playerX;
 var playerY;
 var playerHP;
-
 var mapMatrix;
-
 var mouseDown;
+var textArray;
+var gameWin; //the winstate of the game
 
 function preload() {
 	font = loadFont("assets/playtime.ttf");
@@ -17,7 +16,7 @@ function preload() {
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	mouseDown = false;
-
+	gameWin = false;
 	textSize(height / 30);
 	textAlign(CENTER, CENTER);
 	rectMode(CENTER);
@@ -54,6 +53,9 @@ function setup() {
 
 	//make new matrix to mark off visted rooms
 
+	//sets a bunch of text that could come up as you enter new rooms
+	textArray = ["Another dark room", "Another one", "You feel dizzy", "This is starting to get old", "You must be getting closer to an exit right?", "Do these walls look familiar to you?", "You wonder if you will ever see sunlight again"];
+
 	// set starttext
 	currentText = "You wake up, everything is black, are you blind? No you're just in a dark room."
 
@@ -73,10 +75,15 @@ function draw() {
 }
 
 function drawBackground() {
-	background(30);
-	fill(70);
-	quad(0, 0, width, 0, width * 0.75, height * 0.25, width * 0.25, height * 0.25);
-	quad(0, height, width, height, width * 0.75, height * 0.75, width * 0.25, height * 0.75);
+
+	if (gameWin) {
+		background(255);
+	} else {
+		background(30);
+		fill(70);
+		quad(0, 0, width, 0, width * 0.75, height * 0.25, width * 0.25, height * 0.25);
+		quad(0, height, width, height, width * 0.75, height * 0.75, width * 0.25, height * 0.75);
+	}
 }
 
 function drawText() {
@@ -85,43 +92,43 @@ function drawText() {
 	fill(20);
 	text(currentText, width / 2, height * 0.25);
 
-	if (mapMatrix[playerX - 1][playerY] > 0) { //checks if space above is free to move into
-		if (button("Go North", 0.4)) {
-			playerX--;
-			updateRoom();
-			print("north");
+	if (!gameWin) {
+		if (mapMatrix[playerX - 1][playerY] > 0) { //checks if space above is free to move into
+			if (button("Go North", 0.4)) {
+				playerX--;
+				updateRoom();
+				print("north");
+			}
 		}
-	}
 
-	if (mapMatrix[playerX + 1][playerY] > 0) { //checks if space below is free to move into
-		if(button("Go South", 0.5)){
-			playerX++;
-			updateRoom();
-			print("south");
+		if (mapMatrix[playerX + 1][playerY] > 0) { //checks if space below is free to move into
+			if (button("Go South", 0.5)) {
+				playerX++;
+				updateRoom();
+				print("south");
+			}
 		}
-	}
 
-	if (mapMatrix[playerX][playerY + 1] > 0) { //checks if space on the right is free to move into
-		if(button("Go East", 0.6))
-		{
-			playerY++;
-			updateRoom();
-			print("east");
+		if (mapMatrix[playerX][playerY + 1] > 0) { //checks if space on the right is free to move into
+			if (button("Go East", 0.6)) {
+				playerY++;
+				updateRoom();
+				print("east");
+			}
 		}
-	}
 
-	if (mapMatrix[playerX][playerY - 1] > 0) { //checks if space on the left is free to move intos
-		if(button("Go West", 0.7))
-		{
-			playerY--;
-			updateRoom();
-			print("west");
+		if (mapMatrix[playerX][playerY - 1] > 0) { //checks if space on the left is free to move intos
+			if (button("Go West", 0.7)) {
+				playerY--;
+				updateRoom();
+				print("west");
+			}
 		}
-	}
 
-	if (currentRoom > 3) {
-		if (button("Pick up Item", 0.8)) {
+		if (currentRoom > 3) {
+			if (button("Pick up Item", 0.8)) {
 
+			}
 		}
 	}
 }
@@ -166,7 +173,12 @@ function drawHP() {
 
 function updateRoom() {
 	currentRoom = mapMatrix[playerX][playerY];
-	currentText = "You enter another room";
+	currentText = textArray[int(random(textArray.length))];
+
+	if (currentRoom == 2) {
+		gameWin = true;
+		currentText = "You see a door, you use all your force to push it open. You are free";
+	}
 }
 
 //need these so is the buttons can work
